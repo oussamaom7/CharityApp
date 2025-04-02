@@ -1,0 +1,10 @@
+@startuml
+User -> System : Register()
+System -> Database : Save User Info
+Database -> System : Confirm Registration
+System -> User : Registration Successful
+User -> System : Login()
+System -> Database : Validate Credentials
+Database -> System : Return User Data
+System -> User : Login Successful
+@enduml

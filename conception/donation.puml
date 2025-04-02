@@ -1,0 +1,11 @@
+@startuml
+User -> System : Initiate Donation()
+System -> PaymentGateway : Process Payment()
+PaymentGateway -> Bank : Validate Transaction
+Bank -> PaymentGateway : Confirm Payment
+PaymentGateway -> System : Payment Successful
+System -> Database : Save Donation Record
+Database -> System : Confirm Donation
+System -> CharityAction : Update Donation Status
+CharityAction -> User : Send Donation Confirmation
+@enduml

@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CharityAppApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(CharityAppApplication.class, args);
     }
 

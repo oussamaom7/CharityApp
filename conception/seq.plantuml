@@ -1,0 +1,60 @@
+@startuml
+
+' --- Diagramme de Séquence Détaillé pour User ---
+User -> System : Register()
+System -> Database : Save User Info
+Database -> System : Confirm Registration
+System -> User : Registration Successful
+User -> System : Login()
+System -> Database : Validate Credentials
+Database -> System : Return User Data
+System -> User : Login Successful
+User -> System : Cancel Account()
+System -> Database : Delete User Data
+Database -> System : Confirm Deletion
+System -> User : Account Deleted
+
+' --- Diagramme de Séquence Détaillé pour Organization ---
+Organization -> System : Request Validation()
+System -> Admin : Send Validation Request
+Admin -> Database : Check Organization Info
+Database -> Admin : Return Validation Status
+Admin -> System : Approve/Reject Organization
+System -> Organization : Notify Decision
+Organization -> System : Update Information()
+System -> Database : Save Updates
+Database -> System : Confirm Update
+
+' --- Diagramme de Séquence Détaillé pour CharityAction ---
+Organization -> System : Create Charity Action()
+System -> Database : Save Charity Action Info
+Database -> System : Confirm Action Creation
+System -> Organization : Charity Action Created
+User -> System : Explore Charity Actions()
+System -> Database : Fetch Available Actions
+Database -> System : Return Action List
+System -> User : Display Actions
+User -> System : Request Action Details()
+System -> Database : Fetch Action Details
+Database -> System : Return Action Details
+System -> User : Show Action Details
+
+' --- Diagramme de Séquence Détaillé pour Donation ---
+User -> System : Initiate Donation()
+System -> PaymentGateway : Process Payment()
+PaymentGateway -> Bank : Validate Transaction
+Bank -> PaymentGateway : Confirm Payment
+PaymentGateway -> System : Payment Successful
+System -> Database : Save Donation Record
+Database -> System : Confirm Donation
+System -> CharityAction : Update Donation Status
+CharityAction -> User : Send Donation Confirmation
+User -> System : Cancel Donation()
+System -> Database : Check Eligibility
+Database -> System : Confirm Eligibility
+System -> PaymentGateway : Refund Payment()
+PaymentGateway -> Bank : Process Refund
+Bank -> PaymentGateway : Confirm Refund
+PaymentGateway -> System : Refund Successful
+System -> User : Refund Processed
+@enduml

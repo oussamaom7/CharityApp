@@ -1,0 +1,9 @@
+@startuml
+' --- Diagramme de Séquence Détaillé pour Organization ---
+Organization -> System : Request Validation()
+System -> Admin : Send Validation Request
+Admin -> Database : Check Organization Info
+Database -> Admin : Return Validation Status
+Admin -> System : Approve/Reject Organization
+System -> Organization : Notify Decision
+@enduml
