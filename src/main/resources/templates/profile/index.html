@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body text-center">
+                    <img src="/images/avatar.png" class="rounded-circle mb-3" style="width: 120px; height: 120px; border: 4px solid #007bff;" alt="Profile Avatar">
+                    <h2 class="fw-bold mb-1">Welcome, <span th:text="${username}">User</span>!</h2>
+                    <p class="text-muted mb-4">This is your profile dashboard. Access your activities and settings below.</p>
+                    <div class="row g-3 justify-content-center">
+                        <div class="col-12 col-md-4">
+                            <a href="/donations" class="btn btn-outline-primary w-100 py-3 fs-5">
+                                <i class="bi bi-cash-coin me-2"></i>My Donations
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <a href="/profile/volunteering" class="btn btn-outline-success w-100 py-3 fs-5">
+                                <i class="bi bi-people-fill me-2"></i>My Volunteering
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <a href="/profile/settings" class="btn btn-outline-secondary w-100 py-3 fs-5">
+                                <i class="bi bi-gear me-2"></i>Settings
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a href="/admin/profile" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="btn btn-warning btn-lg">Go to Admin Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

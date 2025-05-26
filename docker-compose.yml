@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: charityapp-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: charitydb
+      MYSQL_USER: charityuser
+      MYSQL_PASSWORD: charitypass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - charitynet
+
+  mongodb:
+    image: mongo:6.0
+    container_name: charityapp-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: mongopass
+      MONGO_INITDB_DATABASE: charitydb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - charitynet
+
+volumes:
+  mysql_data:
+  mongo_data:
+
+networks:
+  charitynet:
+    driver: bridge

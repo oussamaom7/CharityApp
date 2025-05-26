@@ -1,0 +1,66 @@
+@startuml
+' --- Diagramme de Classe Détaillé ---
+class User {
+    - Long id
+    - String name
+    - String email
+    - String password
+    + register()
+    + login()
+    + cancelAccount()
+}
+
+class Organization {
+    - Long id
+    - String name
+    - String description
+    + requestValidation()
+    + updateInformation()
+}
+
+class Admin {
+    - Long id
+    - String email
+    - String password
+    + approveOrganization()
+}
+
+class CharityAction {
+    - Long id
+    - String title
+    - String description
+    - Double goalAmount
+    + createAction()
+    + updateStatus()
+    + getActionDetails()
+}
+
+class Donation {
+    - Long id
+    - Double amount
+    - String paymentMethod
+    - Date date
+    + processPayment()
+    + cancelDonation()
+}
+
+class PaymentGateway {
+    + processPayment()
+    + refundPayment()
+}
+
+class Transaction {
+    - Long id
+    - Double amount
+    - Date date
+    - String status
+    + validateTransaction()
+}
+
+User "1" -- "*" Donation : makes
+User "*" -- "*" CharityAction : participates in
+Organization "1" -- "*" CharityAction : creates
+Admin "1" -- "*" Organization : validates
+Donation "1" -- "1" PaymentGateway : processes
+Donation "1" -- "1" Transaction : recorded in
+@enduml

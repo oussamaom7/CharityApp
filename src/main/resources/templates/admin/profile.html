@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        .profile-header {
+            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+            color: white;
+            padding: 40px 0 20px 0;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 30px;
+        }
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <div class="profile-header text-center">
+        <img src="/images/avatar.png" alt="Admin Avatar" class="avatar">
+        <h2 th:text="${username}">Admin</h2>
+        <p class="lead">Administrator Dashboard</p>
+    </div>
+    <!-- Success/Error Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="row">
+        <!-- Pending Approvals -->
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0"><i class="bi bi-hourglass-split me-2"></i>Pending Approvals</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs" id="approvalTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="charity-tab" data-bs-toggle="tab" data-bs-target="#charity-actions" type="button" role="tab">
+                                Charity Actions
+                                <span th:if="${!pendingCharityActions.empty}" class="badge bg-danger ms-1" th:text="${pendingCharityActions.size()}"></span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="org-tab" data-bs-toggle="tab" data-bs-target="#organizations" type="button" role="tab">
+                                Organizations
+                                <span th:if="${!pendingOrganizations.empty}" class="badge bg-danger ms-1" th:text="${pendingOrganizations.size()}"></span>
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content p-3 border border-top-0 rounded-bottom" id="approvalTabsContent">
+                        <!-- Charity Actions Tab -->
+                        <div class="tab-pane fade show active" id="charity-actions" role="tabpanel">
+                            <div th:if="${pendingCharityActions.empty}" class="text-center py-4">
+                                <p class="text-muted">No pending charity actions for approval.</p>
+                            </div>
+                            <div th:unless="${pendingCharityActions.empty}" class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Organization</th>
+                                            <th>Goal</th>
+                                            <th>Created</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="action : ${pendingCharityActions}">
+                                            <td th:text="${action.title}"></td>
+                                            <td th:text="${action.organization.name}"></td>
+                                            <td th:text="${#numbers.formatDecimal(action.goalAmount, 1, 2)} MAD"></td>
+                                            <td th:text="${#temporals.format(action.createdAt, 'MMM dd, yyyy')}"></td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <a th:href="@{/charity-actions/}{id}(id=${action.id})" class="btn btn-outline-primary">
+                                                        <i class="bi bi-eye"></i> View
+                                                    </a>
+                                                    <form th:action="@{/admin/charity-actions/approve}" method="post" class="d-inline">
+                                                        <input type="hidden" name="id" th:value="${action.id}">
+                                                        <button type="submit" class="btn btn-outline-success">
+                                                            <i class="bi bi-check-lg"></i> Approve
+                                                        </button>
+                                                    </form>
+                                                    <form th:action="@{/admin/charity-actions/reject}" method="post" class="d-inline">
+                                                        <input type="hidden" name="id" th:value="${action.id}">
+                                                        <button type="submit" class="btn btn-outline-danger" 
+                                                                onclick="return confirm('Are you sure you want to reject this charity action?')">
+                                                            <i class="bi bi-x-lg"></i> Reject
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Organizations Tab -->
+                        <div class="tab-pane fade" id="organizations" role="tabpanel">
+                            <div th:if="${pendingOrganizations.empty}" class="text-center py-4">
+                                <p class="text-muted">No pending organizations for approval.</p>
+                            </div>
+                            <div th:unless="${pendingOrganizations.empty}" class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="org : ${pendingOrganizations}">
+                                            <td th:text="${org.name}"></td>
+                                            <td th:text="${org.contactEmail}"></td>
+                                            <td th:text="${org.contactPhone}"></td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <form th:action="@{/admin/organizations/approve}" method="post" class="d-inline">
+                                                        <input type="hidden" name="id" th:value="${org.id}">
+                                                        <button type="submit" class="btn btn-outline-success">
+                                                            <i class="bi bi-check-lg"></i> Approve
+                                                        </button>
+                                                    </form>
+                                                    <form th:action="@{/admin/organizations/reject}" method="post" class="d-inline">
+                                                        <input type="hidden" name="id" th:value="${org.id}">
+                                                        <button type="submit" class="btn btn-outline-danger"
+                                                                onclick="return confirm('Are you sure you want to reject this organization?')">
+                                                            <i class="bi bi-x-lg"></i> Reject
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Other Admin Content -->
+        <div class="col-md-6">
+            <h4 class="section-title">All Volunteers</h4>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Interest</th>
+                    <th>User</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="volunteer : ${volunteers}">
+                    <td th:text="${volunteer.name}"></td>
+                    <td th:text="${volunteer.email}"></td>
+                    <td th:text="${volunteer.interest}"></td>
+                    <td th:text="${volunteer.user != null ? volunteer.user.username : 'Anonymous'}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h4 class="section-title">All Users</h4>
+            <ul class="list-group">
+                <li class="list-group-item" th:each="user : ${users}" th:text="${user.username}"></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 mt-4">
+            <h4 class="section-title">All Donations</h4>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Amount</th>
+                    <th>Donor Name</th>
+                    <th>Charity Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="donation : ${donations}">
+                    <td th:text="${donation.id}"></td>
+                    <td th:text="${donation.amount}"></td>
+                    <td th:text="${donation.donorName}"></td>
+                    <td th:text="${donation.charityActionTitle}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Donate</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm p-4">
+                    <h2 class="mb-4 text-center" style="color:#1e90ff;">Make a Donation</h2>
+                    <form th:action="@{/donate-form}" method="post">
+                        <label for="amount" class="form-label">Amount</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">$</span>
+                            <input type="number" id="amount" name="amount" step="0.01" min="0.01" required class="form-control" placeholder="Enter amount">
+                        </div>
+                        <label for="donorName" class="form-label">Your Name</label>
+                        <input type="text" id="donorName" name="donorName" required class="form-control mb-3" placeholder="Your Name">
+                        <label for="charityActionName" class="form-label">Charity Action</label>
+                        <input type="text" id="charityActionName" name="charityActionName" required class="form-control mb-4" placeholder="Enter action name">
+                        <button type="submit" class="btn btn-primary w-100 py-2">Donate</button>
+                    </form>
+                    <div th:if="${success}" class="alert alert-success mt-3 text-center">
+                        <p>Thank you for your donation!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

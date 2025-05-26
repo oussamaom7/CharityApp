@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Charity Action</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Add Charity Action</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/admin/charity-actions/add}" th:object="${charityActionRequest}" method="post" autocomplete="off">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" th:field="*{title}" class="form-control" id="title" placeholder="e.g. Food Drive" required autofocus>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea th:field="*{description}" class="form-control" id="description" rows="3" placeholder="Describe the charity action..." required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="organizationId" class="form-label">Organization</label>
+                            <select th:field="*{organizationId}" class="form-select" id="organizationId" required>
+                                <option value="" disabled selected>Select an organization</option>
+                                <option th:each="org : ${organizations}" th:value="${org.id}" th:text="${org.name}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="goalAmount" class="form-label">Goal Amount (MAD)</label>
+                            <div class="input-group">
+                                <input type="number" th:field="*{goalAmount}" class="form-control" id="goalAmount" 
+                                       min="1" step="0.01" required 
+                                       placeholder="Enter the target amount">
+                                <span class="input-group-text">MAD</span>
+                            </div>
+                            <div class="form-text">The target amount you want to raise for this charity action</div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="/admin/charity-actions" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Cancel</a>
+                            <button type="submit" class="btn btn-success px-4"><i class="bi bi-check-circle"></i> Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

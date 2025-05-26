@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>About Us - CharityApp</title>
+    <th:block th:replace="~{layout :: head}" />
+    <style>
+        .hero { 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/about-hero.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        .section { padding: 50px 0; }
+    </style>
+</head>
+<body>
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">About Us</h1>
+            <p class="lead">Learn more about our mission and the team behind CharityApp</p>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2 class="mb-4">Our Mission</h2>
+                    <p class="lead mb-4">To create a world where everyone has access to basic necessities and opportunities for a better life.</p>
+                    <p>We believe in the power of collective action and the importance of supporting communities in need. Through our various programs and initiatives, we work to provide disaster relief, clean water, and education to those who need it most.</p>
+                </div>
+                <div class="col-md-6">
+                    <img src="/images/mission.jpg" alt="Our Mission" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="section bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Our Values</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-heart-fill display-4 text-primary mb-3"></i>
+                            <h4>Compassion</h4>
+                            <p>We approach every situation with empathy and understanding.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-shield-check display-4 text-success mb-3"></i>
+                            <h4>Integrity</h4>
+                            <p>We maintain the highest standards of transparency and accountability.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-people-fill display-4 text-info mb-3"></i>
+                            <h4>Community</h4>
+                            <p>We believe in the power of working together for common goals.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="section bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Our Impact</h2>
+            <div class="row text-center">
+                <div class="col-md-4 mb-4">
+                    <div class="display-4 text-primary mb-2">50+</div>
+                    <h5>Communities Served</h5>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="display-4 text-success mb-2">1000+</div>
+                    <h5>Lives Impacted</h5>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="display-4 text-info mb-2">25+</div>
+                    <h5>Active Programs</h5>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div th:replace="~{layout :: footer}"></div>
+    <th:block th:replace="~{layout :: script}" />
+</body>
+</html>

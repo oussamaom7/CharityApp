@@ -1,0 +1,10 @@
+@startuml
+Organization -> System : Create Charity Action()
+System -> Database : Save Charity Action Info
+Database -> System : Confirm Action Creation
+System -> Organization : Charity Action Created
+User -> System : Explore Charity Actions()
+System -> Database : Fetch Available Actions
+Database -> System : Return Action List
+System -> User : Display Actions
+@enduml

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - CharityApp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main navigation">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <img th:src="@{/charity.png}" src="/charity.png" alt="CharityApp Logo" style="max-height: 40px;">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/organizations">Organizations</a></li>
+                <li class="nav-item"><a class="nav-link" href="/campaigns">Campaigns</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Profile</a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="/profile">View Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link active" href="/admin" aria-current="page">Admin Dashboard</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container mt-5">
+    <h2 class="mb-4 fw-bold text-primary">Admin Dashboard</h2>
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                    <i class="bi bi-building fs-1 text-info mb-2"></i>
+                    <h5 class="card-title">Organizations</h5>
+                    <a href="#organizations" class="btn btn-outline-info w-100 mt-2" data-bs-toggle="tab">View Organizations</a>
+                    <a href="/admin/organizations/add" class="btn btn-primary w-100 mt-2">Add Organization</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                    <i class="bi bi-people fs-1 text-success mb-2"></i>
+                    <h5 class="card-title">Charity Actions</h5>
+                    <a href="#charityActions" class="btn btn-outline-success w-100 mt-2" data-bs-toggle="tab">View Charity Actions</a>
+                    <a href="/admin/charity-actions/add" class="btn btn-success w-100 mt-2">Add Charity Action</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                    <i class="bi bi-cash-coin fs-1 text-warning mb-2"></i>
+                    <h5 class="card-title">Donations</h5>
+                    <a href="#donations" class="btn btn-outline-warning w-100 mt-2" data-bs-toggle="tab">View Donations</a>
+                    <a href="/admin/donations/add" class="btn btn-warning w-100 mt-2">Add Donation</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                    <i class="bi bi-journal-text fs-1 text-secondary mb-2"></i>
+                    <h5 class="card-title">Blog & More</h5>
+                    <a href="/admin/blog/create" class="btn btn-outline-secondary w-100 mt-2">Add Blog</a>
+                    <a href="/admin/programs/add" class="btn btn-outline-secondary w-100 mt-2">Add Program</a>
+                    <a href="/admin/users/add" class="btn btn-outline-secondary w-100 mt-2">Add User</a>
+                    <a href="/admin/reports" class="btn btn-outline-secondary w-100 mt-2">View Reports</a>
+                    <form th:action="@{/admin/simulate-transaction}" method="post" class="w-100 mt-2">
+                        <button type="submit" class="btn btn-warning w-100">Simulate Transaction</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div th:if="${toast}" class="toast align-items-center text-bg-success border-0 position-fixed bottom-0 end-0 m-4 show" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 9999; min-width: 250px;">
+        <div class="d-flex">
+            <div class="toast-body">
+                <span th:text="${toast}">Action completed successfully!</span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <!-- Recent User Actions Table -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-info text-white fw-semibold">Recent User Actions</div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0 align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th>Timestamp</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="log : ${recentUserActions}">
+                    <td th:text="${#temporals.format(log.timestamp, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${log.username}"></td>
+                    <td th:text="${log.action}"></td>
+                    <td th:text="${log.details}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(recentUserActions)}">
+                    <td colspan="4" class="text-center">No recent user actions found.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tabbed Content -->
+    <ul class="nav nav-tabs nav-fill mb-3" id="dashboardTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="org-tab" data-bs-toggle="tab" data-bs-target="#organizations" type="button" role="tab">Organizations</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="charity-tab" data-bs-toggle="tab" data-bs-target="#charityActions" type="button" role="tab">Charity Actions</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="donations-tab" data-bs-toggle="tab" data-bs-target="#donations" type="button" role="tab">Donations</button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="dashboardTabsContent">
+        <!-- Organizations Tab -->
+        <div class="tab-pane fade show active" id="organizations" role="tabpanel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="card-title mb-0">Organizations</h5>
+                <a href="/admin/organizations/add" class="btn btn-primary">Add Organization</a>
+            </div>
+            <div class="card p-3 shadow-sm">
+                <div th:if="${organizations.empty}" class="text-center p-4">
+                    <p class="text-muted">No organizations found.</p>
+                    <a href="/admin/organizations/add" class="btn btn-primary">Add Your First Organization</a>
+                </div>
+                <table class="table table-hover" th:if="${!organizations.empty}">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="org : ${organizations}">
+                        <td th:text="${org.id}"></td>
+                        <td th:text="${org.name}"></td>
+                        <td>
+                            <span class="badge bg-success">ACTIVE</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Charity Actions Tab -->
+        <div class="tab-pane fade" id="charityActions" role="tabpanel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="card-title mb-0">Charity Actions</h5>
+                <a href="/admin/charity-actions/add" class="btn btn-success">Add Charity Action</a>
+            </div>
+            <div class="card p-3 shadow-sm">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="action : ${charityActions}">
+                        <td th:text="${action.id}"></td>
+                        <td th:text="${action.title}"></td>
+                        <td th:text="${action.description}"></td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${action.status eq 'PENDING' ? 'bg-warning' : (action.status eq 'APPROVED' ? 'bg-success' : 'bg-danger')}"
+                                  th:text="${action.status}"></span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <form th:action="@{/admin/charity-actions/approve}" method="post" class="d-inline">
+                                    <input type="hidden" name="id" th:value="${action.id}">
+                                    <button type="submit" class="btn btn-success">Approve</button>
+                                </form>
+                                <form th:action="@{/admin/charity-actions/reject}" method="post" class="d-inline">
+                                    <input type="hidden" name="id" th:value="${action.id}">
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to reject this charity action?')">Reject</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Donations Tab -->
+        <div class="tab-pane fade" id="donations" role="tabpanel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="card-title mb-0">All Donations</h5>
+                <a href="/admin/donations/add" class="btn btn-warning">Add Donation</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Amount</th>
+                            <th>Donor Name</th>
+                            <th>Charity Action</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="donation : ${donations}">
+                            <td th:text="${donation.id}">1</td>
+                            <td th:text="${donation.amount}">100.00</td>
+                            <td th:text="${donation.donorName}">John Doe</td>
+                            <td th:text="${donation.charityActionName}">Food Drive</td>
+                            <td th:text="${#temporals.format(donation.date, 'yyyy-MM-dd HH:mm')}">2025-05-04 21:00</td>
+                            <td th:text="${donation.status}">APPROVED</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Other Sections -->
+    <div class="row mt-5 g-3">
+        <div class="col-md-3">
+            <a href="/admin/users" class="btn btn-outline-secondary w-100">Manage Users</a>
+        </div>
+        <div class="col-md-3">
+            <a href="/admin/blog/list" class="btn btn-outline-secondary w-100">Manage Blogs</a>
+        </div>
+        <div class="col-md-3">
+            <a href="/admin/programs" class="btn btn-outline-secondary w-100">Manage Programs</a>
+        </div>
+        <div class="col-md-3">
+            <a href="/admin/reports" class="btn btn-outline-secondary w-100">View Reports</a>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap JS (needed for tabs) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
